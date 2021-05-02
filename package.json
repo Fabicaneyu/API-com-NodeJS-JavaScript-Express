@@ -1,0 +1,19 @@
+{
+  "name": "api-com-nodejs-javascript-express",
+  "version": "1.0.0",
+  "description": "aplicação back-end",
+  "main": "index.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/Fabicaneyu/API-com-NodeJS-JavaScript-Express.git"
+  },
+  "author": "",
+  "license": "ISC",
+  "bugs": {
+    "url": "https://github.com/Fabicaneyu/API-com-NodeJS-JavaScript-Express/issues"
+  },
+  "homepage": "https://github.com/Fabicaneyu/API-com-NodeJS-JavaScript-Express#readme"
+}

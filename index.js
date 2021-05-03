@@ -1,7 +1,10 @@
 const express = require('express'); //instancia
+const bodyParser = require('body-parser')
 const app = express(); //executa
 
 const port = 3000; //variável constante não pode sofrer alteração
+
+app.use(bodyParser.json());
  
 //endpoint para testar
 app.get('/hello', (req, res) => { // barra sem detalhe de endpoint
@@ -39,7 +42,22 @@ app.get('/mensagens/:id', (req, res) => {
     res.send(mensagem)
 });
 
+// terceiro endpoint - [POST] /mensagens - Cria uma nova mensagem
+app.post('/mensagens', (req,res) => {
+    const mensagem = req.body.mensagem; //bateu uma msg
 
+    mensagens.push(mensagem); //adiciona a msg nova
+
+    res.send(`Mensagem criada com sucesso: ${mensagem}`); // mostra a msg nova
+});
+
+//quarto endpoint- [PUT] /mensagens/{id} - Atualiza uma mensagem pelo ID
+app.put('/mensagens/:id', (req,res) => {
+    const id = req.params.id -1; //define que será pelo id
+    const mensagem = req.body.mensagem; // a msg será captada através do body
+    mensagens[id] = mensagem; // posição do id da lista de mensagens, coloco a nova msg q eu acabei de obter 
+    res.send(`Mensagem atualizada com sucesso: ${mensagem}.`);// aviso que tem nova msg e o seu novo texto
+});
 
 app.listen(port, () => {
     console.info(`App rodando em http://localhost:${port}`);

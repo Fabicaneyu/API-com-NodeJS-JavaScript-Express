@@ -37,16 +37,22 @@ const mensagens = [
     }   
 ]
 
+const getMensagensValidas = () => mensagens.filter(Boolean);
+
+const getMensagemById = id => getMensagensValidas().find(msg => msg.id === id);
+
+
 //primeiro endpoint [GET] /mensagens - retorna lista de mensagens
 app.get('/mensagens', (req, res) => {
-    res.send(mensagens.filter(Boolean)); //o boolean permite que ao fazer um delete e dar o get all não aparecerá null
+    res.send(getMensagensValidas()); //o boolean permite que ao fazer um delete e dar o get all não aparecerá null
 });
 
 
 //segundo endpoint com parâmetro ID - [GET] /mensagens/{id} - Retorna apenas uam única mensagem pelo ID
 app.get('/mensagens/:id', (req, res) => {
-    const id = req.params.id -1; //nesse caso a posição 0 vira 1
-    const mensagem = mensagens [id] //índice ID
+    const id = +req.params.id; //nesse caso a posição 0 vira 1
+
+    const mensagem = getMensagemById(id); //índice ID
 
     if(!mensagem) {
         res.send('Mensagem não encontrada');
@@ -74,9 +80,9 @@ app.post('/mensagens', (req,res) => {
 
 //quarto endpoint- [PUT] /mensagens/{id} - Atualiza uma mensagem pelo ID
 app.put('/mensagens/:id', (req,res) => {
-    const id = req.params.id -1; //define que será pelo id
+    const id = +req.params.id; //define que será pelo id
+    const mensagem = getMensagemById(id); //índice ID
 
-    const mensagem = mensagens[id]
     const novoTexto = req.body.texto; // a msg será captada através do body
 
     if (!novoTexto) { //só atualizo a msg caso novo texto exista
@@ -93,8 +99,17 @@ app.put('/mensagens/:id', (req,res) => {
 
 //quinto endpoint - - [DELETE] /mensagens/{id} - Remover uma mensagem pelo ID
 app.delete('/mensagens/:id', (req,res) => {
-    const id = req.params.id-1; //obtem o id
-    delete mensagens[id]; // deletará pelo id colocado
+    const id = +req.params.id; //define que será pelo id
+    const mensagem = getMensagemById(id); //índice ID
+
+    if(!mensagem){
+        res.send('Mensagem não encontrada')
+        return;
+    }
+
+    const index = mensagens.indexOf(mensagem);
+    delete mensagens[index]; // deletará pelo id colocado
+
     res.send('Mensagem removida com sucesso') //avisa que deu certo a remoção
 })
 

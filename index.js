@@ -30,7 +30,7 @@ const mensagens = [
 
 //primeiro endpoint [GET] /mensagens - retorna lista de mensagens
 app.get('/mensagens', (req, res) => {
-    res.send(mensagens);
+    res.send(mensagens.filter(Boolean)); //o boolean permite que ao fazer um delete e dar o get all não aparecerá null
 });
 
 
@@ -58,6 +58,13 @@ app.put('/mensagens/:id', (req,res) => {
     mensagens[id] = mensagem; // posição do id da lista de mensagens, coloco a nova msg q eu acabei de obter 
     res.send(`Mensagem atualizada com sucesso: ${mensagem}.`);// aviso que tem nova msg e o seu novo texto
 });
+
+//quinto endpoint - - [DELETE] /mensagens/{id} - Remover uma mensagem pelo ID
+app.delete('/mensagens/:id', (req,res) => {
+    const id = req.params.id-1; //obtem o id
+    delete mensagens[id]; // deletará pelo id colocado
+    res.send('Mensagem removida com sucesso') //avisa que deu certo a remoção
+})
 
 app.listen(port, () => {
     console.info(`App rodando em http://localhost:${port}`);

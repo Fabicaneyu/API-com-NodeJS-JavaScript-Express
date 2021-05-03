@@ -23,9 +23,18 @@ Lista de endpoints da aplicação
 
 //Array, lista de mensagens de status de pedido
 const mensagens = [
-    "status de pedido em atraso",
-    "status de pedido a caminho",
-    "status de pedido já entregue"
+    {
+        "id": 1,
+        "texto":  "status de pedido em atraso",
+    },
+    {
+        "id": 2,
+        "texto":  "status de pedido a caminho",
+    },
+    {
+        "id": 3,
+        "texto":  "status de pedido já entregue"
+    }   
 ]
 
 //primeiro endpoint [GET] /mensagens - retorna lista de mensagens
@@ -39,24 +48,47 @@ app.get('/mensagens/:id', (req, res) => {
     const id = req.params.id -1; //nesse caso a posição 0 vira 1
     const mensagem = mensagens [id] //índice ID
 
-    res.send(mensagem)
+    if(!mensagem) {
+        res.send('Mensagem não encontrada');
+        return;
+    }
+
+    res.send(mensagem);
 });
 
 // terceiro endpoint - [POST] /mensagens - Cria uma nova mensagem
 app.post('/mensagens', (req,res) => {
-    const mensagem = req.body.mensagem; //bateu uma msg
+    const mensagem = req.body; //bateu uma msg
 
+    if(!mensagem || !mensagem.texto){ // caso ñ venha msg, ou essa msg não tenha um campo chamado texto eu mostro msg inválida
+        res.send('Mensagem inválida')
+
+        return;
+    }
+
+    mensagem.id = mensagens.length + 1; //exibe o novo id da nova msg
     mensagens.push(mensagem); //adiciona a msg nova
 
-    res.send(`Mensagem criada com sucesso: ${mensagem}`); // mostra a msg nova
+    res.send(mensagem); // mostra a msg nova
 });
 
 //quarto endpoint- [PUT] /mensagens/{id} - Atualiza uma mensagem pelo ID
 app.put('/mensagens/:id', (req,res) => {
     const id = req.params.id -1; //define que será pelo id
-    const mensagem = req.body.mensagem; // a msg será captada através do body
-    mensagens[id] = mensagem; // posição do id da lista de mensagens, coloco a nova msg q eu acabei de obter 
-    res.send(`Mensagem atualizada com sucesso: ${mensagem}.`);// aviso que tem nova msg e o seu novo texto
+
+    const mensagem = mensagens[id]
+    const novoTexto = req.body.texto; // a msg será captada através do body
+
+    if (!novoTexto) { //só atualizo a msg caso novo texto exista
+        res.send('Mensagem invalida')
+
+        return;
+    }
+
+
+    mensagem.texto = novoTexto;
+
+    res.send(mensagem);// aviso que tem nova msg e o seu novo texto
 });
 
 //quinto endpoint - - [DELETE] /mensagens/{id} - Remover uma mensagem pelo ID
